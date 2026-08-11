@@ -56,7 +56,7 @@ class Auditra_Plugin {
 		require_once AUDITRA_PLUGIN_DIR . 'includes/enrichment/interface-enrichment-client.php';
 		require_once AUDITRA_PLUGIN_DIR . 'includes/enrichment/interface-vulnerability-provider.php';
 		require_once AUDITRA_PLUGIN_DIR . 'includes/enrichment/class-enrichment-manager.php';
-		require_once AUDITRA_PLUGIN_DIR . 'includes/enrichment/class-endoflife-client.php';
+		require_once AUDITRA_PLUGIN_DIR . 'includes/enrichment/class-lifecycle-client.php';
 		require_once AUDITRA_PLUGIN_DIR . 'includes/enrichment/class-wpvulnerability-client.php';
 		require_once AUDITRA_PLUGIN_DIR . 'includes/enrichment/class-wporg-client.php';
 

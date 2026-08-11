@@ -48,7 +48,7 @@ class Auditra_Tool_Get_Capabilities {
 			'available_now'     => array(
 				'get_capabilities'      => 'This orientation document.',
 				'list_plugins'          => 'Paginated inventory of every installed plugin, mu-plugin, and drop-in: slug, name, version, status, update availability, and health flags (see flag_definitions). detail=true adds author, truncated description, requirements, auto-update setting, disk footprint, and raw wordpress.org figures: last updated, tested-up-to, active installs, rating, rating count, support threads, resolved ratio.',
-				'get_site_overview'     => 'The site environment: WordPress, PHP, and database versions each with end-of-life support facts (cycle, EOL date, whether passed), theme, multisite status, object cache, debug mode, memory limits, cron state, plugin counts, and published post count.',
+				'get_site_overview'     => 'The site environment: WordPress, PHP, and database versions each with support facts \u2014 PHP and the database carry the vendor-published end-of-life date and whether it has passed, WordPress carries the security status wordpress.org publishes for that release \u2014 theme, multisite status, object cache, debug mode, memory limits, cron state, plugin counts, and published post count.',
 				'check_vulnerabilities' => 'Known published vulnerabilities matched against the plugin versions actually installed, plus WordPress core: CVE identifiers, CVSS score and severity as published, affected range, and fixed-in version. Version matches only, never slug matches. Supply-chain audits are returned separately in supply_chain; see supply_chain_note.',
 				'analyze_autoload'      => 'Autoloaded option weight per plugin with attribution confidence, the largest individual options, and an explicit unattributed bucket with its share of total bytes.',
 				'analyze_cron'          => 'Scheduled events grouped by owning plugin, WP-Cron state, and orphaned hooks with no registered callback (with the conditional-registration caveat stated).',
@@ -82,7 +82,7 @@ class Auditra_Tool_Get_Capabilities {
 				'no_wporg_record'           => 'wordpress.org returned "not found" for this slug. Could be premium, custom, renamed, or removed; these are not distinguishable, so no stronger claim is made.',
 				'not_updated_2y'            => 'Last wordpress.org update more than 730 days ago (and not more than 1460; see not_updated_4y).',
 				'not_updated_4y'            => 'Last wordpress.org update more than 1460 days ago. Implies not_updated_2y; only this stronger flag is emitted.',
-				'untested_current_wp'       => 'The tested-up-to value resolves to a WordPress release cycle three or more positions behind the newest cycle on endoflife.date\'s wordpress release list.',
+				'untested_current_wp'       => 'The tested-up-to value resolves to a WordPress release cycle three or more positions behind the newest cycle in the release list wordpress.org publishes.',
 				'requires_newer_php'        => 'The plugin header requires a PHP version newer than the one running.',
 				'requires_newer_wp'         => 'The plugin header requires a WordPress version newer than the one running.',
 				'network_active'            => 'Active network-wide on a multisite.',

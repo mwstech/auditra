@@ -100,6 +100,14 @@ class Auditra_MCP_Server {
 	private $registry;
 
 	/**
+	 * Nesting level of the output buffer this class opened, or null when it
+	 * holds none. Recorded so cleanup can close exactly its own buffer.
+	 *
+	 * @var int|null
+	 */
+	private $buffer_level = null;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param Auditra_Auth_Interface $auth     Authentication mechanism.
@@ -119,8 +127,16 @@ class Auditra_MCP_Server {
 	public function register_routes() {
 		// Other plugins sometimes emit stray notices during REST bootstrap.
 		// Capture everything from here on so the JSON body stays clean.
+		//
+		// The buffer is opened here and closed in discard_buffer(), which is
+		// reached on every path out of the request: the normal one through
+		// rest_pre_serve_request, and a shutdown fallback for the case where
+		// the response never gets that far. Only the buffer opened here is
+		// ever closed — see discard_buffer() for why that matters.
 		if ( $this->is_mcp_request() ) {
 			ob_start();
+			$this->buffer_level = ob_get_level();
+			add_action( 'shutdown', array( $this, 'discard_buffer' ), 0 );
 		}
 
 		register_rest_route(
@@ -494,12 +510,16 @@ class Auditra_MCP_Server {
 	public function serve_empty_accepted_response( $served, $result, $request, $server ) {
 		unset( $server );
 
+		// Close our own buffer first, whatever route ended up serving this
+		// request. It was opened from the request URI, before routing, so a
+		// request that never reaches our callback — a token that fails the
+		// route pattern, say — still has a buffer of ours waiting to be
+		// closed. Returning early without closing it would leave it open for
+		// the rest of the request.
+		$this->discard_buffer();
+
 		if ( 0 !== strpos( $request->get_route(), '/' . self::REST_NAMESPACE . '/mcp/' ) ) {
 			return $served;
-		}
-
-		while ( ob_get_level() > 0 ) {
-			ob_end_clean();
 		}
 
 		if ( 202 === $result->get_status() ) {
@@ -507,6 +527,32 @@ class Auditra_MCP_Server {
 		}
 
 		return $served;
+	}
+
+	/**
+	 * Closes the output buffer opened in register_routes(), discarding
+	 * whatever stray output landed in it.
+	 *
+	 * Closes only this class's own buffer and anything nested inside it,
+	 * never a buffer that was already open when we started. WordPress is a
+	 * shared environment: core, themes, and other plugins open buffers of
+	 * their own, and tearing down the whole stack (`while ob_get_level() > 0`)
+	 * closes buffers belonging to code that is still expecting to close them
+	 * itself. Idempotent, so the shutdown fallback is a no-op once the normal
+	 * path has run.
+	 *
+	 * @return void
+	 */
+	public function discard_buffer() {
+		if ( null === $this->buffer_level ) {
+			return;
+		}
+		while ( ob_get_level() >= $this->buffer_level ) {
+			if ( ! @ob_end_clean() ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- A buffer another component marked unremovable must end the loop, not warn.
+				break;
+			}
+		}
+		$this->buffer_level = null;
 	}
 
 	/**

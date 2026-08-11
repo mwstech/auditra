@@ -262,7 +262,7 @@ class Auditra_Enrichment_Manager {
 	 * Honoring WP_HTTP_BLOCK_EXTERNAL keeps us a good citizen on locked-down
 	 * hosts and gives tests a clean way to simulate a firewalled site.
 	 *
-	 * @param string $host Host name, e.g. 'endoflife.date'.
+	 * @param string $host Host name, e.g. 'api.wordpress.org'.
 	 * @return bool
 	 */
 	public function is_blocked( $host ) {

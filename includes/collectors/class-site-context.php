@@ -66,7 +66,7 @@ class Auditra_Site_Context_Collector {
 
 	/**
 	 * Database flavor and true version. MariaDB and MySQL are distinct
-	 * products on endoflife.date, and MariaDB hides behind a "5.5.5-" prefix
+	 * products in the lifecycle table, and MariaDB hides behind a "5.5.5-" prefix
 	 * in replication-compatible server strings.
 	 *
 	 * @param wpdb $wpdb WordPress database object.

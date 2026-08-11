@@ -48,3 +48,35 @@ enable. Periodic warming makes every question fast but turns a passive plugin
 into one making daily outbound requests on sites nobody is querying, which is
 exactly the traffic pattern that gets a plugin blocked at a volunteer-run API.
 Lean toward warm-on-enable only.
+
+## Refreshing the lifecycle table
+
+`includes/data/lifecycle.json` carries published end-of-life dates for PHP,
+MySQL and MariaDB (decision 67). It needs attention when a **new version cycle
+appears upstream**, not when Auditra ships a release: three Auditra releases in
+a quarter with no new PHP or MariaDB cycle need no table change at all.
+
+**What ages.** Only missing rows. Dates already in the table are vendor
+commitments and do not move — PHP 8.1's end-of-life date was fixed years before
+it arrived. What accumulates is new cycles the table has never heard of.
+
+**What happens if it is not refreshed.** Nothing breaks and nothing lies. A
+version whose cycle is absent is reported with no support claim attached,
+exactly as an unavailable source behaves. The failure mode is silence.
+
+**Sources, in this order — vendors only, never an aggregator:**
+
+- PHP: https://www.php.net/supported-versions.php and https://www.php.net/eol.php
+- MySQL: Oracle's Lifetime Support Policy for MySQL
+- MariaDB: https://mariadb.org/about/maintenance-policy/
+
+WordPress is deliberately absent from the file: its status comes live from
+wordpress.org's stable-check endpoint and never needs refreshing.
+
+**Cadence.** Quarterly is comfortably enough — PHP ships one minor a year, and
+MySQL and MariaDB move slower. Benny's intent is a scheduled internal check
+(calendar entry, or a cron that emails a reminder) once the plugin is live;
+that tool is out of scope for the plugin itself and belongs in the internal
+toolchain, not in shipped code. Worth pairing the reminder with a diff of the
+three vendor pages so the check is "has anything changed?" rather than a
+re-read.

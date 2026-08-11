@@ -110,7 +110,7 @@ class Auditra_Tool_List_Plugins {
 		// Release cycles place a tested-up-to value relative to the current
 		// WordPress release without pretending minor-version arithmetic works
 		// across majors (6.9 -> 7.0).
-		$eol_client  = new Auditra_Endoflife_Client( $manager );
+		$eol_client  = new Auditra_Lifecycle_Client( $manager );
 		$cycle_index = null;
 		$cycles      = $eol_client->cycles( 'WordPress' );
 		if ( null !== $cycles ) {
@@ -348,7 +348,7 @@ class Auditra_Tool_List_Plugins {
 
 	/**
 	 * How many release cycles a tested-up-to value sits behind the newest
-	 * cycle. Uses the ordered endoflife.date list (index 0 = newest) so major
+	 * cycle. Uses the ordered wordpress.org release list (index 0 = newest) so major
 	 * boundaries (6.9 -> 7.0) need no arithmetic. Unknown cycles count as
 	 * infinitely behind only if older than every known cycle; unmatchable
 	 * values return 0 so no flag is raised on bad data.

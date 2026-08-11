@@ -1,0 +1,52 @@
+{
+	"_comment": "Published support lifecycle dates for PHP, MySQL and MariaDB. Compiled from each vendor's own published policy, not from a third-party aggregator: php.net/supported-versions.php and php.net/eol.php, Oracle's MySQL lifecycle policy, and mariadb.org/about/maintenance-policy/. Dates are facts published by the vendors; this file is a compilation of them and carries no third-party licence. A version whose cycle is absent here is reported with no support claim attached, never a guessed one. Refresh procedure and cadence: docs/PHASE-2.md, 'Refreshing the lifecycle table'.",
+	"_compiled": "2026-08-11",
+	"_eol_means": "eol is the end of security support: the date after which the vendor ships no fixes of any kind. active_until is the end of full/active support, where it is published separately.",
+	"php": {
+		"_source": "https://www.php.net/supported-versions.php and https://www.php.net/eol.php",
+		"cycles": [
+			{ "cycle": "8.5", "released": "2025-11-20", "active_until": "2027-12-31", "eol": "2029-12-31" },
+			{ "cycle": "8.4", "released": "2024-11-21", "active_until": "2026-12-31", "eol": "2028-12-31" },
+			{ "cycle": "8.3", "released": "2023-11-23", "active_until": "2025-12-31", "eol": "2027-12-31" },
+			{ "cycle": "8.2", "released": "2022-12-08", "active_until": "2024-12-31", "eol": "2026-12-31" },
+			{ "cycle": "8.1", "released": "2021-11-25", "active_until": "2023-12-31", "eol": "2025-12-31" },
+			{ "cycle": "8.0", "released": "2020-11-26", "active_until": "2022-11-26", "eol": "2023-11-26" },
+			{ "cycle": "7.4", "released": "2019-11-28", "active_until": "2021-11-28", "eol": "2022-11-28" },
+			{ "cycle": "7.3", "released": "2018-12-06", "active_until": "2020-12-06", "eol": "2021-12-06" },
+			{ "cycle": "7.2", "released": "2017-11-30", "active_until": "2019-11-30", "eol": "2020-11-30" },
+			{ "cycle": "7.1", "released": "2016-12-01", "active_until": "2018-12-01", "eol": "2019-12-01" },
+			{ "cycle": "7.0", "released": "2015-12-03", "active_until": "2018-01-04", "eol": "2019-01-10" },
+			{ "cycle": "5.6", "released": "2014-08-28", "active_until": "2017-01-19", "eol": "2018-12-31" },
+			{ "cycle": "5.5", "released": "2013-06-20", "active_until": "2015-07-10", "eol": "2016-07-21" },
+			{ "cycle": "5.4", "released": "2012-03-01", "active_until": "2014-09-14", "eol": "2015-09-03" },
+			{ "cycle": "5.3", "released": "2009-06-30", "active_until": "2013-07-11", "eol": "2014-08-14" }
+		]
+	},
+	"mysql": {
+		"_source": "https://www.mysql.com/support/eol-notice.html and Oracle's Lifetime Support Policy for MySQL. eol is the end of Extended Support where published, otherwise the end of Premier Support.",
+		"cycles": [
+			{ "cycle": "9.7", "released": "2026-04-21", "active_until": "2034-04-21", "eol": "2034-04-21", "lts": true },
+			{ "cycle": "8.4", "released": "2024-04-30", "active_until": "2029-04-30", "eol": "2032-04-30", "lts": true },
+			{ "cycle": "8.0", "released": "2018-04-19", "active_until": "2025-04-30", "eol": "2026-04-30", "lts": true },
+			{ "cycle": "5.7", "released": "2015-10-21", "active_until": "2020-10-31", "eol": "2023-10-31" },
+			{ "cycle": "5.6", "released": "2013-02-05", "active_until": "2018-02-28", "eol": "2021-02-28" },
+			{ "cycle": "5.5", "released": "2010-12-03", "active_until": "2015-12-31", "eol": "2018-12-31" }
+		]
+	},
+	"mariadb": {
+		"_source": "https://mariadb.org/about/maintenance-policy/ . eol is the end of community maintenance.",
+		"cycles": [
+			{ "cycle": "11.8", "released": "2025-06-04", "eol": "2028-06-04", "lts": true },
+			{ "cycle": "11.4", "released": "2024-05-29", "eol": "2029-05-29", "lts": true },
+			{ "cycle": "10.11", "released": "2023-02-16", "eol": "2028-02-16", "lts": true },
+			{ "cycle": "10.6", "released": "2021-07-06", "eol": "2026-07-06", "lts": true },
+			{ "cycle": "10.5", "released": "2020-06-24", "eol": "2025-06-24", "lts": true },
+			{ "cycle": "10.4", "released": "2019-06-18", "eol": "2024-06-18", "lts": true },
+			{ "cycle": "10.3", "released": "2018-05-25", "eol": "2023-05-25", "lts": true },
+			{ "cycle": "10.2", "released": "2017-05-23", "eol": "2022-05-23", "lts": true },
+			{ "cycle": "10.1", "released": "2015-10-17", "eol": "2020-10-17", "lts": true },
+			{ "cycle": "10.0", "released": "2014-03-31", "eol": "2019-03-31", "lts": true },
+			{ "cycle": "5.5", "released": "2012-04-11", "eol": "2020-04-11", "lts": true }
+		]
+	}
+}

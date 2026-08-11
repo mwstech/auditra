@@ -18,7 +18,7 @@ Auditra turns a WordPress site into a read-only MCP server. Enable the endpoint,
 
 * `list_plugins` — inventory with versions, update status, and health flags (`has_vulnerability`, `closed_on_wporg`, `not_updated_2y`/`4y`, `untested_current_wp`, `no_wporg_record`, `single_file`, `mu_plugin`, `dropin`). Paginated, compact rows by default.
 * `check_vulnerabilities` — published CVEs matched against the versions actually installed, with CVSS as published, affected ranges, and fixed-in versions. Version matches only; a slug appearing in an advisory database is not a finding.
-* `get_site_overview` — WordPress, PHP, and database versions with end-of-life status, plus object cache, debug state, memory limits, cron state, and plugin counts.
+* `get_site_overview` — WordPress, PHP, and database versions with support status, plus object cache, debug state, memory limits, cron state, and plugin counts.
 * `analyze_autoload` — autoloaded option weight attributed per plugin, largest options, and an explicit unattributed bucket.
 * `analyze_cron` — scheduled events per plugin plus orphaned hooks with no registered callback.
 * `analyze_database` — non-core tables with sizes and owners, orphaned tables listed separately.
@@ -38,7 +38,7 @@ Response size is bounded. Compact rows by default, `detail: true` capped at 10 r
 
 Not measured, and it says so instead of inventing numbers: per-plugin runtime cost, front-end asset weight. And it performs no write operation of any kind.
 
-Enrichment comes from api.wordpress.org, wpvulnerability.net, and endoflife.date; all keyless, all cached, all optional. A firewalled site still gets a complete inventory with the enrichment fields absent and the missing sources named.
+Enrichment comes from api.wordpress.org and wpvulnerability.net; both keyless, both cached, both optional. Support lifecycle dates for PHP, MySQL and MariaDB ship with the plugin, compiled from each vendor's published policy, so no third service is contacted for them. A firewalled site still gets a complete inventory with the enrichment fields absent and the missing sources named.
 
 = The endpoint, stated plainly =
 
@@ -53,13 +53,15 @@ Auditra exposes information about your site over an authenticated HTTP endpoint.
 
 == External services ==
 
-To enrich its answers, Auditra contacts three public services. In every case the only data transmitted is plugin slugs and version strings. No site content, no URLs (beyond the API hosts), no user data, and no personal data ever leave your site. All three degrade silently: if a service is unreachable, the affected fields are absent and the response says which source was unavailable.
+To enrich its answers, Auditra contacts two public services. In every case the only data transmitted is plugin slugs and version strings. No site content, no URLs (beyond the API hosts), no user data, and no personal data ever leave your site. Both degrade silently: if a service is unreachable, the affected fields are absent and the response says which source was unavailable.
+
+Support lifecycle dates for PHP, MySQL and MariaDB are **not** fetched from anywhere. They ship inside the plugin, compiled from each vendor's own published policy, so no external service is involved in reporting them.
 
 **1. WordPress.org Plugin API** (https://api.wordpress.org/)
 What it is: the official plugin directory API, run by WordPress.org, which serves the public listing data for plugins hosted there.
-What is sent: plugin slugs, one request per installed plugin. Nothing else — no site URL, no version of your site, no identifiers.
-When it is sent: only while answering a `list_plugins` or `get_plugin_details` call from your MCP client. Never on a page load, never on a schedule. Cached 24 hours, so repeat questions send nothing.
-What comes back: last-updated dates, tested-up-to versions, active install counts, ratings, support activity.
+What is sent: plugin slugs, one request per installed plugin. Separately, a request carrying no parameters at all fetches the public list of WordPress releases. Nothing else — no site URL, no version of your site, no identifiers.
+When it is sent: only while answering a `list_plugins`, `get_site_overview`, or `get_plugin_details` call from your MCP client. Never on a page load, never on a schedule. Cached 24 hours, so repeat questions send nothing.
+What comes back: last-updated dates, tested-up-to versions, active install counts, ratings, support activity, and the security status WordPress.org publishes for each release (latest, outdated, or insecure).
 Terms of service: https://central.wordpress.org/tos/
 Privacy policy: https://wordpress.org/about/privacy/
 
@@ -70,13 +72,6 @@ When it is sent: only while answering a `check_vulnerabilities`, `list_plugins`,
 What comes back: published vulnerability records with CVE identifiers, CVSS scores, affected version ranges, and supply-chain audit verdicts.
 Terms and legal notice: https://www.robotstxt.es/legal/
 Privacy policy: https://www.wpvulnerability.com/privacy/
-
-**3. endoflife.date** (https://endoflife.date/)
-What it is: an open-source community project that tracks support and end-of-life dates for software products. Source and licence: https://github.com/endoflife-date/endoflife.date
-What is sent: product names only — the strings "php", "wordpress", and your database flavour ("mysql" or "mariadb"). The version you run is compared locally against the reply and is never part of the request. No slugs, no site data of any kind.
-When it is sent: only while answering a `get_site_overview` or `list_plugins` call from your MCP client. Never on a page load, never on a schedule. Cached 7 days.
-What comes back: release-cycle support and end-of-life dates for the versions you run.
-Terms and privacy: this project publishes no terms of service and no privacy policy. It is a static, unauthenticated public API, and the requests above carry no data capable of identifying your site. If that is not acceptable to you, block the host using WordPress's own `WP_HTTP_BLOCK_EXTERNAL` and `WP_ACCESSIBLE_HOSTS` constants, which this plugin honours for all three services; the affected fields are then simply absent and every other answer is unaffected.
 
 = Supporting the data sources =
 
@@ -168,7 +163,7 @@ If a source is unreachable but cached data survives, that data is served and lab
 * Initial public release.
 * Nine read-only MCP tools: get_capabilities, list_plugins, get_site_overview, check_vulnerabilities, analyze_autoload, analyze_cron, analyze_database, analyze_usage, get_plugin_details.
 * MCP over JSON-RPC 2.0 on a single Streamable HTTP endpoint, stateless, protocol revisions 2026-07-28 (per-request metadata, `server/discover`) and 2025-11-25 / 2025-06-18 / 2025-03-26 (`initialize` handshake), negotiated per request.
-* Enrichment from wordpress.org, WPVulnerability, and endoflife.date: keyless, cached, parallel-fetched, with per-source coverage reporting and progressive backoff on failure.
+* Enrichment from wordpress.org and WPVulnerability: keyless, cached, parallel-fetched, with per-source coverage reporting and progressive backoff on failure. PHP, MySQL and MariaDB lifecycle dates are bundled, not fetched.
 * Explicit degradation: per-source status objects with reason codes, stale-but-labeled data served when an upstream is unreachable, and a four-state vulnerability response that returns no findings list at all when nothing could be checked.
 * Attribution engine mapping options, tables, and cron hooks to owning plugins with explicit confidence levels and a visible unattributed bucket.
 * Security: endpoint disabled by default, token authentication compared with hash_equals, per-IP rate limiting, failed-authentication log, and a CI gate that fails the build if any write operation is introduced.

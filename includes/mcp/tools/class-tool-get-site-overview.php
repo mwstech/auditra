@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Site environment enriched with end-of-life support facts. Facts only:
+ * Site environment enriched with support lifecycle facts. Facts only:
  * versions, cycles, dates, and whether dates have passed. No severity labels,
  * no advice — the client does the judgment.
  */
@@ -25,7 +25,7 @@ class Auditra_Tool_Get_Site_Overview {
 	public static function register( $registry ) {
 		$registry->register(
 			'get_site_overview',
-			'Returns this WordPress site\'s environment: WordPress, PHP, and database versions with their end-of-life support status (cycle, EOL date, whether it has passed), active theme and parent, multisite status, object cache, debug mode, memory limits, cron state, plugin counts by status, and published post count.',
+			'Returns this WordPress site\'s environment: WordPress, PHP, and database versions with their support status \u2014 for PHP and the database, the vendor-published end-of-life date and whether it has passed; for WordPress, the security status wordpress.org publishes for that exact release (latest, outdated, or insecure) \u2014 active theme and parent, multisite status, object cache, debug mode, memory limits, cron state, plugin counts by status, and published post count.',
 			array(
 				'type'       => 'object',
 				'properties' => new stdClass(),
@@ -44,7 +44,7 @@ class Auditra_Tool_Get_Site_Overview {
 		$context   = $collector->collect();
 
 		$manager = new Auditra_Enrichment_Manager();
-		$eol     = new Auditra_Endoflife_Client( $manager );
+		$eol     = new Auditra_Lifecycle_Client( $manager );
 
 		$statuses = $eol->support_statuses(
 			array(
