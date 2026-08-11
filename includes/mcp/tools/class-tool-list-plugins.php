@@ -77,13 +77,13 @@ class Auditra_Tool_List_Plugins {
 	 * @return string JSON string.
 	 */
 	public static function run( $args ) {
-		$status     = isset( $args['status'] ) ? (string) $args['status'] : 'all';
+		$status     = isset( $args['status'] ) && is_scalar( $args['status'] ) ? (string) $args['status'] : 'all';
 		$has_update = isset( $args['has_update'] ) ? (bool) $args['has_update'] : null;
 		$detail     = ! empty( $args['detail'] );
 		$max_limit  = $detail ? self::MAX_DETAIL_LIMIT : self::MAX_LIMIT;
-		$limit      = isset( $args['limit'] ) ? (int) $args['limit'] : min( self::DEFAULT_LIMIT, $max_limit );
+		$limit      = isset( $args['limit'] ) && is_scalar( $args['limit'] ) ? (int) $args['limit'] : min( self::DEFAULT_LIMIT, $max_limit );
 		$limit      = max( 1, min( $max_limit, $limit ) );
-		$offset     = isset( $args['offset'] ) ? max( 0, (int) $args['offset'] ) : 0;
+		$offset     = isset( $args['offset'] ) && is_scalar( $args['offset'] ) ? max( 0, (int) $args['offset'] ) : 0;
 
 		$collector = new Auditra_Inventory_Collector();
 		$records   = $collector->collect();

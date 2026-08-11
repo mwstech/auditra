@@ -58,7 +58,8 @@ class Auditra_Tool_Get_Plugin_Details {
 	 * @return string JSON string.
 	 */
 	public static function run( $args ) {
-		$slugs = isset( $args['slugs'] ) && is_array( $args['slugs'] ) ? array_slice( array_map( 'strval', $args['slugs'] ), 0, self::MAX_SLUGS ) : array();
+		// Scalars only; see docs/DECISIONS.md 68.
+		$slugs = isset( $args['slugs'] ) && is_array( $args['slugs'] ) ? array_slice( array_map( 'strval', array_filter( $args['slugs'], 'is_scalar' ) ), 0, self::MAX_SLUGS ) : array();
 		if ( array() === $slugs ) {
 			return Auditra_Tool_Registry::with_meta(
 				array( 'error' => 'The slugs argument is required: an array of 1 to 5 plugin slugs.' ),

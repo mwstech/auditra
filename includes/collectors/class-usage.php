@@ -261,7 +261,17 @@ class Auditra_Usage_Collector {
 					$clauses[] = 'post_content LIKE %s';
 					$values[]  = $pattern;
 				}
+				// A builder that yields no patterns would emit
+				// "SUM(CASE WHEN THEN ...)" — a syntax error and a
+				// prepare()-without-placeholders notice. No current builder
+				// does; the guard is here so a future one cannot.
+				if ( array() === $clauses ) {
+					continue;
+				}
 				$selects[] = 'SUM(CASE WHEN ' . implode( ' OR ', $clauses ) . ' THEN 1 ELSE 0 END) AS c' . (int) $i;
+			}
+			if ( array() === $selects ) {
+				continue;
 			}
 
 			$sql = 'SELECT ' . implode( ', ', $selects ) . " FROM {$wpdb->posts} WHERE post_type != 'revision' AND post_status != 'auto-draft'";

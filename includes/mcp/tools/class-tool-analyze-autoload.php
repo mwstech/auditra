@@ -52,7 +52,7 @@ class Auditra_Tool_Analyze_Autoload {
 	 * @return string JSON string.
 	 */
 	public static function run( $args ) {
-		$top = isset( $args['top'] ) ? max( 1, min( self::MAX_TOP, (int) $args['top'] ) ) : self::DEFAULT_TOP;
+		$top = isset( $args['top'] ) && is_scalar( $args['top'] ) ? max( 1, min( self::MAX_TOP, (int) $args['top'] ) ) : self::DEFAULT_TOP;
 
 		$inventory = new Auditra_Inventory_Collector();
 		$slugs     = array();
