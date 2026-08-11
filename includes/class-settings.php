@@ -376,12 +376,7 @@ JS;
 						<td><?php esc_html_e( 'Plugin slugs and the WordPress version', 'auditra' ); ?></td>
 						<td><?php esc_html_e( 'Published vulnerability records', 'auditra' ); ?></td>
 					</tr>
-					<tr>
-						<td>endoflife.date</td>
-						<td><?php esc_html_e( 'Product names only (php, WordPress, mysql, mariadb)', 'auditra' ); ?></td>
-						<td><?php esc_html_e( 'Support and end-of-life dates', 'auditra' ); ?></td>
-					</tr>
-				</tbody>
+					</tbody>
 			</table>
 
 			<?php $auth_log = Auditra_Request_Guard::auth_log(); ?>
