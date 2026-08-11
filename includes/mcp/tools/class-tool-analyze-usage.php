@@ -54,8 +54,11 @@ class Auditra_Tool_Analyze_Usage {
 	 * @return string JSON string.
 	 */
 	public static function run( $args ) {
-		$requested = isset( $args['slugs'] ) && is_array( $args['slugs'] ) ? array_map( 'strval', $args['slugs'] ) : null;
-		$max_posts = isset( $args['max_posts'] ) ? max( 1, (int) $args['max_posts'] ) : self::DEFAULT_MAX_POSTS;
+		// Scalars only. An array or object inside the list must not reach
+		// strval(), which warns and yields the literal string "Array"
+		// (docs/DECISIONS.md 68).
+		$requested = isset( $args['slugs'] ) && is_array( $args['slugs'] ) ? array_map( 'strval', array_filter( $args['slugs'], 'is_scalar' ) ) : null;
+		$max_posts = isset( $args['max_posts'] ) && is_scalar( $args['max_posts'] ) ? max( 1, (int) $args['max_posts'] ) : self::DEFAULT_MAX_POSTS;
 
 		$collector = new Auditra_Usage_Collector();
 		$features  = $collector->features_by_plugin();

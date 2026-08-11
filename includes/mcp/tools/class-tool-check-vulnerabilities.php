@@ -106,11 +106,12 @@ class Auditra_Tool_Check_Vulnerabilities {
 	 * @return string JSON string.
 	 */
 	public static function run( $args ) {
-		$requested    = isset( $args['slugs'] ) && is_array( $args['slugs'] ) ? array_map( 'strval', $args['slugs'] ) : null;
+		// Scalars only; see docs/DECISIONS.md 68.
+		$requested    = isset( $args['slugs'] ) && is_array( $args['slugs'] ) ? array_map( 'strval', array_filter( $args['slugs'], 'is_scalar' ) ) : null;
 		$include_core = ! isset( $args['include_core'] ) || (bool) $args['include_core'];
-		$limit        = isset( $args['limit'] ) ? (int) $args['limit'] : self::DEFAULT_LIMIT;
+		$limit        = isset( $args['limit'] ) && is_scalar( $args['limit'] ) ? (int) $args['limit'] : self::DEFAULT_LIMIT;
 		$limit        = max( 1, min( self::MAX_LIMIT, $limit ) );
-		$offset       = isset( $args['offset'] ) ? max( 0, (int) $args['offset'] ) : 0;
+		$offset       = isset( $args['offset'] ) && is_scalar( $args['offset'] ) ? max( 0, (int) $args['offset'] ) : 0;
 
 		$collector     = new Auditra_Inventory_Collector();
 		$slug_versions = array();

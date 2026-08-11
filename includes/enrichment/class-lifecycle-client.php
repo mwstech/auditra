@@ -36,6 +36,18 @@ class Auditra_Lifecycle_Client implements Auditra_Enrichment_Client_Interface {
 	const MAX_STALE = MONTH_IN_SECONDS;
 
 	/**
+	 * Release statuses the stable-check endpoint documents.
+	 *
+	 * @var string[]
+	 */
+	const RELEASE_STATUSES = array( 'latest', 'outdated', 'insecure' );
+
+	/**
+	 * Most release rows accepted from the endpoint.
+	 */
+	const MAX_RELEASES = 5000;
+
+	/**
 	 * Products answered from the bundled table rather than the network.
 	 *
 	 * @var string[]
@@ -96,10 +108,15 @@ class Auditra_Lifecycle_Client implements Auditra_Enrichment_Client_Interface {
 	 * @return array<string, ?array> Map of product => status array or null.
 	 */
 	public function support_statuses( $products ) {
-		$statuses = array_fill_keys( array_keys( $products ), null );
+		// Keyed by the normalized product name, not the caller's spelling:
+		// pre-filling from the raw keys and writing to the lowercased ones
+		// left a spurious null entry behind for any key that was not already
+		// lowercase.
+		$statuses = array();
 
 		foreach ( $products as $product => $version ) {
-			$product = strtolower( (string) $product );
+			$product              = strtolower( (string) $product );
+			$statuses[ $product ] = null;
 			if ( in_array( $product, self::BUNDLED, true ) ) {
 				$statuses[ $product ] = $this->bundled_status( $product, (string) $version );
 				continue;
@@ -298,13 +315,31 @@ class Auditra_Lifecycle_Client implements Auditra_Enrichment_Client_Interface {
 			return null;
 		}
 		$data = json_decode( $body, true );
-		if ( ! is_array( $data ) || array() === $data ) {
+		// A JSON object, not a list: the endpoint answers version => status.
+		// A list would parse into positional keys that mean nothing, so it is
+		// rejected rather than stored.
+		if ( ! is_array( $data ) || array() === $data || array_keys( $data ) === range( 0, count( $data ) - 1 ) ) {
 			return null;
 		}
+
 		$releases = array();
 		foreach ( $data as $version => $state ) {
-			if ( is_scalar( $state ) && is_scalar( $version ) ) {
-				$releases[ (string) $version ] = substr( (string) $state, 0, 20 );
+			if ( ! is_scalar( $state ) || ! is_scalar( $version ) ) {
+				continue;
+			}
+			// Only the statuses this endpoint documents. An unrecognized value
+			// is not something to store and report as a security status.
+			$state = (string) $state;
+			if ( ! in_array( $state, self::RELEASE_STATUSES, true ) ) {
+				continue;
+			}
+			$releases[ substr( (string) $version, 0, 20 ) ] = $state;
+			// A compromised or spoofed upstream must not be able to write an
+			// unbounded list into an option. WordPress has shipped fewer than
+			// a thousand releases in twenty years; this is far above any real
+			// answer and far below anything that would bloat the database.
+			if ( count( $releases ) >= self::MAX_RELEASES ) {
+				break;
 			}
 		}
 		return array() === $releases ? null : $releases;

@@ -15,8 +15,4 @@ delete_option( 'auditra_enrich_store' );
 delete_option( 'auditra_auth_log' );
 delete_option( 'auditra_show_activation_notice' );
 delete_transient( 'auditra_disk_footprint' );
-delete_transient( 'auditra_enrich_eol_php' );
-delete_transient( 'auditra_enrich_eol_wordpress' );
-delete_transient( 'auditra_enrich_eol_mysql' );
-delete_transient( 'auditra_enrich_eol_mariadb' );
 delete_transient( 'auditra_rate_buckets' );
