@@ -151,6 +151,12 @@ If a source is unreachable but cached data survives, that data is served and lab
 
 `check_vulnerabilities` states which of four situations produced its answer: everything checked, everything checked from cached data past its expiry, some plugins checked and the rest named, or nothing checked at all. In the last case it returns **no findings list whatsoever** — an empty list is shaped like an answer, and "I looked and found nothing" is not the same statement as "I could not look".
 
+== Screenshots ==
+
+1. Adding Auditra to an AI client: paste the connection URL into a custom connector. No OAuth and no API key — the token in the URL is the credential.
+2. Asking about vulnerabilities. Every installed plugin is checked against published advisories, and the answer states its own coverage — a clean result explains how it was reached rather than just reporting nothing found.
+3. Reconstructing what was deleted from a site: orphaned tables, stranded rows, and leftover scheduled jobs, attributed to the plugins that left them behind.
+
 == Changelog ==
 
 = 1.0.0 =
