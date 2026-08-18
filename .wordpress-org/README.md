@@ -1,16 +1,21 @@
-Directory assets for the wordpress.org plugin page (banners, icon, screenshots).
-Produced by hand, not committed as placeholders.
+Directory assets for the wordpress.org plugin page.
 
-Required files:
-banner-772x250.png, banner-1544x500.png, icon-128x128.png, icon-256x256.png,
-screenshot-1.png .. screenshot-3.png (contents described in readme.txt).
+Everything in this folder is published to the SVN `assets/` directory by
+.github/workflows/deploy.yml on a tag push, and appears publicly on
+https://wordpress.org/plugins/auditra/ — treat it as public.
 
-STATUS: empty on purpose. The previous set carried the AuditPress wordmark and
-was removed before the 1.0.0 release so the deploy could not publish the
-rejected name onto the public page. They are recoverable from git history
-(the commit that removed them) if any layout is worth reusing.
+Current set:
+  banner-772x250.png    standard banner
+  banner-1544x500.png   retina banner; the master. Derive the 772 from this
+                        one rather than laying it out separately, so both
+                        displays get identical framing.
+  icon-128x128.png      standard icon
+  icon-256x256.png      retina icon
+  screenshot-1..3.png   1544px wide, matching the captions in readme.txt
 
-Anything dropped in here is published to the plugin page by
-.github/workflows/deploy.yml on the next tag push. To update artwork WITHOUT
-cutting a release, use 10up/action-wordpress-plugin-asset-update instead, or
-commit straight into the SVN assets/ directory.
+Screenshot captions live in readme.txt and are read from the readme in the
+stable tag, not from trunk — so changing a caption needs a release, while
+replacing an image does not.
+
+To update artwork without cutting a release, use
+10up/action-wordpress-plugin-asset-update, or commit into SVN assets/ directly.
