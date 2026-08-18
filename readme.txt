@@ -151,12 +151,6 @@ If a source is unreachable but cached data survives, that data is served and lab
 
 `check_vulnerabilities` states which of four situations produced its answer: everything checked, everything checked from cached data past its expiry, some plugins checked and the rest named, or nothing checked at all. In the last case it returns **no findings list whatsoever** — an empty list is shaped like an answer, and "I looked and found nothing" is not the same statement as "I could not look".
 
-== Screenshots ==
-
-1. The settings page: enable toggle, connection URL with copy button, and the disclosure of exactly what is exposed.
-2. An AI assistant answering "which of my plugins are vulnerable?" through Auditra, with version-matched CVE findings.
-3. An AI assistant reconstructing a site's deletion history from orphaned tables, orphaned cron jobs, and leftover autoloaded options.
-
 == Changelog ==
 
 = 1.0.0 =
