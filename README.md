@@ -8,9 +8,9 @@ Ask "which of my plugins are vulnerable?", "what's bloating my options table?", 
 
 Three layers inside one plugin, one REST route, no runtime dependencies:
 
-- **Transport** — `POST /wp-json/auditra/v1/mcp/{token}` speaking MCP over JSON-RPC 2.0 (protocol `2025-11-25`, plain JSON responses, stateless). Token-in-path auth behind a swappable interface, rate limiting, failed-auth logging.
+- **Transport** — `POST /wp-json/auditra/v1/mcp/{token}` speaking MCP over JSON-RPC 2.0 (plain JSON responses, stateless). Both protocol generations are served, decided per request: revision `2026-07-28` (per-request metadata, `server/discover`, `Mcp-*` header validation) and the `initialize`-handshake revisions `2025-11-25` / `2025-06-18` / `2025-03-26`. Token-in-path auth behind a swappable interface, Origin validation, rate limiting, failed-auth logging.
 - **Collectors** — read WordPress directly: inventory, site context, autoloaded options, cron, database tables, content-feature usage, and a three-tier attribution engine that maps options/tables/hooks back to owning plugins with explicit confidence levels (`high` = curated, `medium` = derived, or visibly unattributed).
-- **Enrichment** — wordpress.org, WPVulnerability, and endoflife.date, all keyless, all cached, all degrading silently with per-source coverage reporting and progressive backoff (15 min → 24 h) on failures.
+- **Enrichment** — two external services, wordpress.org and WPVulnerability, both keyless, both cached, both degrading silently with per-source coverage reporting and progressive backoff (15 min → 24 h) on failures. Support lifecycle dates for PHP, MySQL and MariaDB are not fetched at all: they ship in [`includes/data/lifecycle.json`](includes/data/lifecycle.json), compiled from each vendor's published policy.
 
 Nine tools; every response carries `_meta` (totals, truncation, sources unavailable, timestamps) and stays within a 20 KB budget. The server reports **facts, never verdicts** — scoring and advice are deliberately absent, because that's the AI client's job. The full design record lives in [docs/DECISIONS.md](docs/DECISIONS.md).
 
@@ -20,7 +20,7 @@ Nine tools; every response carries `_meta` (totals, truncation, sources unavaila
 2. In Claude: **Settings → Connectors → Add custom connector**, paste the URL (must be `https://`).
 3. Ask questions. Start with "what can you tell me about this site's plugins?"
 
-The site must be publicly reachable over HTTPS with pretty permalinks enabled. Note: most MCP clients cache the tool list — after updating the plugin, disconnect and reconnect the connector to pick up new tools.
+The site must be publicly reachable over HTTPS with pretty permalinks enabled. Clients on revision `2026-07-28` get a 24-hour freshness hint on `tools/list`, so a tool added by a plugin update appears within a day on its own; older revisions have no expiry signal, so reconnect the connector after updating to pick up new tools.
 
 ## Contributing
 
@@ -36,6 +36,10 @@ php tests/mcp-client.php https://example.com/wp-json/auditra/v1/mcp/{token}
 ```
 
 `tests/mcp-client.php` is the CLI harness that exercises the endpoint without an AI client in the loop; `tests/seed-conditions.sh` builds a deliberately messy test site (and `teardown-conditions.sh` reverses it exactly). CI runs a PHP lint matrix (7.4–8.4), PHPCS, and a grep gate that fails the build if any write operation ever appears in the plugin code.
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for the supported versions and how to report a vulnerability privately.
 
 ## License
 
