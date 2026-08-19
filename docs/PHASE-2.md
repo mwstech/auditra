@@ -80,3 +80,77 @@ that tool is out of scope for the plugin itself and belongs in the internal
 toolchain, not in shipped code. Worth pairing the reminder with a diff of the
 three vendor pages so the check is "has anything changed?" rather than a
 re-read.
+
+---
+
+## Review date
+
+Recorded 2026-08-18, the day 1.0.0 shipped. **Revisit 2026-09-17** (30 days).
+Nothing below is urgent; the point of the date is that a backlog nobody looks
+at is not a backlog.
+
+## Trim the stored WordPress release list
+
+`Auditra_Lifecycle_Client::wordpress_releases()` caches the whole stable-check
+payload: **859 rows, ~23 KB** in the options table, when the plugin only ever
+uses the status of the single running version plus the ~53 major.minor cycles
+behind `untested_current_wp`.
+
+Found in the pre-submission audit and **deliberately not fixed then** — the
+option is non-autoloaded, written once a day, dwarfed by the vulnerability
+cache (~244 KB across 44 plugins), and grows only ~0.4 KB a year. Rewriting
+working code the day before resubmission was the wrong trade.
+
+What would fix it: store the derived answers rather than the raw payload — the
+ordered cycle list, the `latest` version string, and the status of the version
+actually being asked about — refetching on a miss when the site's own version
+changes. Keep the degradation behaviour identical: a version the cache cannot
+answer for must produce silence, not a guess.
+
+## An automated test suite
+
+**The strongest recommendation from the 1.0.0 QA review.** Every verification
+in this project has been manual: adversarial input sweeps, the four response
+states, both protocol eras, fresh install, uninstall, concurrency, boundary
+cases on the matching engine. All of it worked because the checks were fresh
+in someone's mind at the time.
+
+That does not survive a gap. A regression in 1.1 will only be caught if
+somebody remembers to re-run the same commands by hand, and the commands live
+in a chat transcript rather than the repository.
+
+Worth seeding from the bugs this project actually had, which are unusually well
+documented in DECISIONS.md:
+
+- scalar guards on every caller-supplied argument (68) — array, object, null,
+  bool into every tool argument
+- the four response states, especially `not_performed` carrying no findings
+  array at all (51)
+- version-range boundaries: inclusive vs exclusive bounds, fixed-in versions,
+  `trunk@rNNNN` supply-chain ranges that resolve to `undetermined` (57)
+- Origin parsing: embedded credentials, suffix attacks, trailing dots,
+  unparseable values that must not collide (60)
+- output-buffer pairing: a foreign buffer opened underneath must survive (66)
+
+Ranked above cache warming. It protects everything else on this list.
+
+## A deployment approval gate
+
+`deploy.yml` currently fires on any `v*` tag push and goes straight to SVN.
+Publishing to wordpress.org is irreversible — a version can be superseded but
+never withdrawn.
+
+Adding `environment: wordpress-org` to the deploy job gives a required-reviewer
+gate, a deployment history on the repo, and credentials scoped to that job
+alone. The secrets move from repository level into the environment.
+
+Deliberately not done before 1.0.0: changing the deployment mechanism
+immediately before depending on it for the first time was the wrong risk. It
+ran clean on 2026-08-18, so the change is safe now.
+
+## Multisite: decide, then say so
+
+The plugin header and readme both declare it not network-tested, and it has
+never been run on a network install. That is honest but unresolved. Either test
+it properly and support it, or keep declaring the limitation — both are
+defensible, neither should stay accidental.
