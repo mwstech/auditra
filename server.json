@@ -1,0 +1,32 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.mwstech/auditra",
+  "title": "Auditra",
+  "description": "Read-only MCP server for WordPress plugin audits: vulnerabilities, bloat, cron, orphaned tables.",
+  "version": "1.0.0",
+  "websiteUrl": "https://www.macronimous.com/free-tools/auditra/",
+  "repository": {
+    "url": "https://github.com/mwstech/auditra",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://{site_domain}/wp-json/auditra/v1/mcp/{token}",
+      "variables": {
+        "site_domain": {
+          "description": "The domain of the WordPress site running the Auditra plugin, without a scheme or trailing slash (for example: example.com). The site must be reachable over HTTPS.",
+          "isRequired": true,
+          "format": "string",
+          "placeholder": "example.com"
+        },
+        "token": {
+          "description": "The access token generated in the site's wp-admin under Tools \u2192 Auditra. Treat it like a password: anyone holding this URL can read the site's plugin inventory. It can be revoked and regenerated from the same screen at any time.",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        }
+      }
+    }
+  ]
+}
