@@ -2,6 +2,7 @@
 .github
 .wordpress-org
 .claude
+.mcp.json
 .gitignore
 .distignore
 .DS_Store
