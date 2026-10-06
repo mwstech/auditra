@@ -29,7 +29,13 @@ class Auditra_Tool_Analyze_Database {
 				'type'       => 'object',
 				'properties' => new stdClass(),
 			),
-			array( __CLASS__, 'run' )
+			array( __CLASS__, 'run' ),
+			array(
+				'title'       => 'Analyze database tables',
+				'annotations' => array(
+					'openWorldHint' => false,
+				),
+			)
 		);
 	}
 

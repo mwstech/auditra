@@ -30,7 +30,13 @@ class Auditra_Tool_Get_Capabilities {
 				'type'       => 'object',
 				'properties' => new stdClass(),
 			),
-			array( __CLASS__, 'run' )
+			array( __CLASS__, 'run' ),
+			array(
+				'title'       => 'Server capabilities',
+				'annotations' => array(
+					'openWorldHint' => false,
+				),
+			)
 		);
 	}
 

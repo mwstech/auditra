@@ -30,7 +30,13 @@ class Auditra_Tool_Get_Site_Overview {
 				'type'       => 'object',
 				'properties' => new stdClass(),
 			),
-			array( __CLASS__, 'run' )
+			array( __CLASS__, 'run' ),
+			array(
+				'title'       => 'Site overview',
+				'annotations' => array(
+					'openWorldHint' => true,
+				),
+			)
 		);
 	}
 

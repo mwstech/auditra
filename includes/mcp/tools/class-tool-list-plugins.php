@@ -66,7 +66,13 @@ class Auditra_Tool_List_Plugins {
 					),
 				),
 			),
-			array( __CLASS__, 'run' )
+			array( __CLASS__, 'run' ),
+			array(
+				'title'       => 'List plugins',
+				'annotations' => array(
+					'openWorldHint' => true,
+				),
+			)
 		);
 	}
 

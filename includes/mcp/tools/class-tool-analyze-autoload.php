@@ -41,7 +41,13 @@ class Auditra_Tool_Analyze_Autoload {
 					),
 				),
 			),
-			array( __CLASS__, 'run' )
+			array( __CLASS__, 'run' ),
+			array(
+				'title'       => 'Analyze autoloaded options',
+				'annotations' => array(
+					'openWorldHint' => false,
+				),
+			)
 		);
 	}
 

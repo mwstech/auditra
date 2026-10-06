@@ -4,7 +4,7 @@ Tags: ai, mcp, plugins, audit, security
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -159,6 +159,10 @@ If a source is unreachable but cached data survives, that data is served and lab
 
 == Changelog ==
 
+= 1.0.1 =
+* Every tool now declares a human-readable title and MCP tool annotations (readOnlyHint, destructiveHint, idempotentHint, openWorldHint), so a client can show what each tool is and see at a glance that none of them write.
+* No functional change: the tools, their arguments and their responses are identical to 1.0.0.
+
 = 1.0.0 =
 * Initial public release.
 * Nine read-only MCP tools: get_capabilities, list_plugins, get_site_overview, check_vulnerabilities, analyze_autoload, analyze_cron, analyze_database, analyze_usage, get_plugin_details.
@@ -169,6 +173,9 @@ If a source is unreachable but cached data survives, that data is served and lab
 * Security: endpoint disabled by default, token authentication compared with hash_equals, per-IP rate limiting, failed-authentication log, and a CI gate that fails the build if any write operation is introduced.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Adds tool titles and annotations for MCP clients. No functional change.
 
 = 1.0.0 =
 Initial public release.

@@ -95,7 +95,13 @@ class Auditra_Tool_Check_Vulnerabilities {
 					),
 				),
 			),
-			array( __CLASS__, 'run' )
+			array( __CLASS__, 'run' ),
+			array(
+				'title'       => 'Check vulnerabilities',
+				'annotations' => array(
+					'openWorldHint' => true,
+				),
+			)
 		);
 	}
 
