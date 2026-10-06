@@ -2,7 +2,7 @@
 Contributors: bennyagmailcom
 Tags: ai, mcp, plugins, audit, security
 Requires at least: 6.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 1.0.1
 License: GPLv2 or later
@@ -128,6 +128,14 @@ These are reported separately and never mixed into the CVE list, because they me
 **These verdicts are WPVulnerability's, not Auditra's.** They are reproduced exactly as published, identified by audit ID and publication date. Auditra does not analyse plugin code, reaches no independent conclusion about any plugin or its authors, and neither endorses nor disputes a verdict. It reports that an audit exists, what it says, and whether your installed version falls inside the range it names.
 
 A supply-chain verdict is a serious accusation by a third party about someone else's software. Attribute it to its source, and take any question about a specific verdict — its evidence, its accuracy, or its removal — to WPVulnerability at https://www.wpvulnerability.net/ rather than to us or to the plugin's author.
+
+= check_vulnerabilities returns an error on my local Mac dev site =
+
+Almost certainly not Auditra, and not fixable from inside a plugin.
+
+Some macOS PHP-FPM setups (Local, and others using the same bundled PHP) crash the PHP worker while resolving `www.wpvulnerability.net`, which returns a 502 to the client. The crash is in the system resolver, below PHP: a one-line `curl_exec()` to the same host, in a file with no Auditra code in it, crashes identically, while the same request from the command line succeeds. Nothing a plugin can catch.
+
+The same site will work normally once the data is cached, and ordinary Linux hosting — where the plugin actually runs in production — is unaffected. If you hit it locally, warm the cache once from WP-CLI, or test against a staging site on normal hosting.
 
 = Why doesn't it give my site a score? =
 
