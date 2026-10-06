@@ -2,9 +2,9 @@
 Contributors: bennyagmailcom
 Tags: ai, mcp, plugins, audit, security
 Requires at least: 6.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -129,6 +129,14 @@ These are reported separately and never mixed into the CVE list, because they me
 
 A supply-chain verdict is a serious accusation by a third party about someone else's software. Attribute it to its source, and take any question about a specific verdict — its evidence, its accuracy, or its removal — to WPVulnerability at https://www.wpvulnerability.net/ rather than to us or to the plugin's author.
 
+= check_vulnerabilities returns an error on my local Mac dev site =
+
+Almost certainly not Auditra, and not fixable from inside a plugin.
+
+Some macOS PHP-FPM setups (Local, and others using the same bundled PHP) crash the PHP worker while resolving `www.wpvulnerability.net`, which returns a 502 to the client. The crash is in the system resolver, below PHP: a one-line `curl_exec()` to the same host, in a file with no Auditra code in it, crashes identically, while the same request from the command line succeeds. Nothing a plugin can catch.
+
+The same site will work normally once the data is cached, and ordinary Linux hosting — where the plugin actually runs in production — is unaffected. If you hit it locally, warm the cache once from WP-CLI, or test against a staging site on normal hosting.
+
 = Why doesn't it give my site a score? =
 
 Because scores would be invented. Auditra reports measurable facts — versions, dates, sizes, counts, published CVEs — and leaves judgment to the model reading them, which can weigh actual context instead of applying a formula.
@@ -159,6 +167,11 @@ If a source is unreachable but cached data survives, that data is served and lab
 
 == Changelog ==
 
+= 1.0.2 =
+* Declares support for WordPress 7.1, verified against 7.1.2: all nine tools answer under both protocol revisions.
+* Adds an FAQ entry for a fault some macOS local development setups hit when looking up the vulnerability data host, which shows up as an error from check_vulnerabilities. It is a crash in the system resolver, below PHP: a plain curl request to the same host fails identically with no plugin code involved, so there is nothing a plugin can catch. Production hosting is unaffected.
+* No code changes: the tools, their arguments and their responses are identical to 1.0.1.
+
 = 1.0.1 =
 * Every tool now declares a human-readable title and MCP tool annotations (readOnlyHint, destructiveHint, idempotentHint, openWorldHint), so a client can show what each tool is and see at a glance that none of them write.
 * No functional change: the tools, their arguments and their responses are identical to 1.0.0.
@@ -173,6 +186,9 @@ If a source is unreachable but cached data survives, that data is served and lab
 * Security: endpoint disabled by default, token authentication compared with hash_equals, per-IP rate limiting, failed-authentication log, and a CI gate that fails the build if any write operation is introduced.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Compatibility metadata only. The plugin code is byte-for-byte identical to 1.0.1, so nothing on your site changes and there is nothing to reconfigure. Safe to skip if you are not on WordPress 7.1.
 
 = 1.0.1 =
 Adds tool titles and annotations for MCP clients. No functional change.
