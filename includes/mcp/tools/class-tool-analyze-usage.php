@@ -43,7 +43,13 @@ class Auditra_Tool_Analyze_Usage {
 					),
 				),
 			),
-			array( __CLASS__, 'run' )
+			array( __CLASS__, 'run' ),
+			array(
+				'title'       => 'Analyze content usage',
+				'annotations' => array(
+					'openWorldHint' => false,
+				),
+			)
 		);
 	}
 

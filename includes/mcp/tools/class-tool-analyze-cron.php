@@ -28,7 +28,13 @@ class Auditra_Tool_Analyze_Cron {
 				'type'       => 'object',
 				'properties' => new stdClass(),
 			),
-			array( __CLASS__, 'run' )
+			array( __CLASS__, 'run' ),
+			array(
+				'title'       => 'Analyze scheduled events',
+				'annotations' => array(
+					'openWorldHint' => false,
+				),
+			)
 		);
 	}
 

@@ -104,12 +104,33 @@ class Auditra_Tool_Registry {
 	 * @param string   $description  Human-readable description.
 	 * @param array    $input_schema JSON Schema for the tool arguments.
 	 * @param callable $callback     Callable receiving the arguments array, returning a JSON string.
+	 * @param array    $meta         Optional display metadata: 'title' and an 'annotations' array
+	 *                               overriding any of readOnlyHint, destructiveHint,
+	 *                               idempotentHint, openWorldHint.
 	 * @return void
 	 */
-	public function register( $name, $description, $input_schema, $callback ) {
+	public function register( $name, $description, $input_schema, $callback, $meta = array() ) {
+		// Annotations default to read-only because the plugin is read-only by
+		// construction: there is no write call anywhere in it and CI fails the
+		// build if one appears. A tool file that omits them still describes
+		// itself truthfully, which is the safe direction for a default.
+		$annotations = array(
+			'readOnlyHint'    => true,
+			'destructiveHint' => false,
+			'idempotentHint'  => true,
+			'openWorldHint'   => false,
+		);
+		if ( isset( $meta['annotations'] ) && is_array( $meta['annotations'] ) ) {
+			$annotations = array_merge( $annotations, $meta['annotations'] );
+		}
+
+		$title                = isset( $meta['title'] ) ? (string) $meta['title'] : $name;
+		$annotations['title'] = $title;
 		$this->tools[ $name ] = array(
+			'title'        => $title,
 			'description'  => $description,
 			'input_schema' => $input_schema,
+			'annotations'  => $annotations,
 			'callback'     => $callback,
 		);
 	}
@@ -124,8 +145,10 @@ class Auditra_Tool_Registry {
 		foreach ( $this->tools as $name => $tool ) {
 			$out[] = array(
 				'name'        => $name,
+				'title'       => $tool['title'],
 				'description' => $tool['description'],
 				'inputSchema' => $tool['input_schema'],
+				'annotations' => $tool['annotations'],
 			);
 		}
 		return $out;

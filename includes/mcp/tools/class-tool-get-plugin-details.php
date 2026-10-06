@@ -47,7 +47,13 @@ class Auditra_Tool_Get_Plugin_Details {
 				),
 				'required'   => array( 'slugs' ),
 			),
-			array( __CLASS__, 'run' )
+			array( __CLASS__, 'run' ),
+			array(
+				'title'       => 'Plugin details',
+				'annotations' => array(
+					'openWorldHint' => true,
+				),
+			)
 		);
 	}
 
