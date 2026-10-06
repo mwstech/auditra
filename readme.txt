@@ -4,7 +4,7 @@ Tags: ai, mcp, plugins, audit, security
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -167,6 +167,11 @@ If a source is unreachable but cached data survives, that data is served and lab
 
 == Changelog ==
 
+= 1.0.2 =
+* Declares support for WordPress 7.1, verified against 7.1.2: all nine tools answer under both protocol revisions.
+* Documents a PHP crash some macOS local development environments hit when resolving the vulnerability data host. The fault is in the system resolver, below PHP — a plain curl request to the same host crashes identically with no plugin code involved — so there is nothing a plugin can catch. Ordinary Linux hosting is unaffected.
+* No code changes: the tools, their arguments and their responses are identical to 1.0.1.
+
 = 1.0.1 =
 * Every tool now declares a human-readable title and MCP tool annotations (readOnlyHint, destructiveHint, idempotentHint, openWorldHint), so a client can show what each tool is and see at a glance that none of them write.
 * No functional change: the tools, their arguments and their responses are identical to 1.0.0.
@@ -181,6 +186,9 @@ If a source is unreachable but cached data survives, that data is served and lab
 * Security: endpoint disabled by default, token authentication compared with hash_equals, per-IP rate limiting, failed-authentication log, and a CI gate that fails the build if any write operation is introduced.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Declares support for WordPress 7.1. No code changes.
 
 = 1.0.1 =
 Adds tool titles and annotations for MCP clients. No functional change.

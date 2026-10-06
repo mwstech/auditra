@@ -3,7 +3,7 @@
   "name": "io.github.mwstech/auditra",
   "title": "Auditra",
   "description": "Read-only MCP server for WordPress plugin audits: vulnerabilities, bloat, cron, orphaned tables.",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "websiteUrl": "https://www.macronimous.com/free-tools/auditra/",
   "repository": {
     "url": "https://github.com/mwstech/auditra",
