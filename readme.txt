@@ -169,7 +169,7 @@ If a source is unreachable but cached data survives, that data is served and lab
 
 = 1.0.2 =
 * Declares support for WordPress 7.1, verified against 7.1.2: all nine tools answer under both protocol revisions.
-* Documents a PHP crash some macOS local development environments hit when resolving the vulnerability data host. The fault is in the system resolver, below PHP — a plain curl request to the same host crashes identically with no plugin code involved — so there is nothing a plugin can catch. Ordinary Linux hosting is unaffected.
+* Adds an FAQ entry for a fault some macOS local development setups hit when looking up the vulnerability data host, which shows up as an error from check_vulnerabilities. It is a crash in the system resolver, below PHP: a plain curl request to the same host fails identically with no plugin code involved, so there is nothing a plugin can catch. Production hosting is unaffected.
 * No code changes: the tools, their arguments and their responses are identical to 1.0.1.
 
 = 1.0.1 =
@@ -188,7 +188,7 @@ If a source is unreachable but cached data survives, that data is served and lab
 == Upgrade Notice ==
 
 = 1.0.2 =
-Declares support for WordPress 7.1. No code changes.
+Compatibility metadata only. The plugin code is byte-for-byte identical to 1.0.1, so nothing on your site changes and there is nothing to reconfigure. Safe to skip if you are not on WordPress 7.1.
 
 = 1.0.1 =
 Adds tool titles and annotations for MCP clients. No functional change.
